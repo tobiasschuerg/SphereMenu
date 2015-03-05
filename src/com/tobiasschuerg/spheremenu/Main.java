@@ -51,7 +51,7 @@ public class Main extends SimpleApplication {
         al.setColor(ColorRGBA.White.mult(1.3f));
         rootNode.addLight(al);
 
-        createSphere();
+        createSphereMenu();
     }
 
     @Override
@@ -79,8 +79,14 @@ public class Main extends SimpleApplication {
         rootNode.attachChild(geo);
     }
 
-    private void createSphere() {
+    private void createSphereMenu() {
         SphereMenu menu = new SphereMenu(this);
+        menu.setSize(45, 75);
+        menu.setRadius(2f);
+        menu.setColumns(2);
+
+        menu.create(4);
+
         rootNode.attachChild(menu);
         menu.move(getCamera().getLocation());
         menu.rotate(getCamera().getRotation());

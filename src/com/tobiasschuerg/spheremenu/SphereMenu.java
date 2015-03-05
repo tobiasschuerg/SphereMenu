@@ -22,17 +22,41 @@ import java.util.List;
  */
 public class SphereMenu extends Node {
 
+    private int columns = 4;
     private List<Node> options = new ArrayList<Node>();
     private final Application app;
+    private float degMenuWidth = 60;
+    private float degMenuHeight = 50;
+    private float radius = 9f;
+    private float buttonSize = 0.25f;
+    private float offsetVer = 5f;
 
     public SphereMenu(Application app) {
         super("SphereMenu");
         this.app = app;
-        create();
     }
 
-    public void create() {
-        for (int i = 0; i < 10; i++) {
+    public void setSize(float horDeg, float verDeg) {
+        this.degMenuWidth = horDeg;
+        this.degMenuHeight = verDeg;
+    }
+
+    public void setColumns(int colums) {
+        columns = colums;
+    }
+
+    public void create(int items) {
+        int rows;
+        int itemsLastRow = items % columns;
+        if (itemsLastRow > 0) {
+            rows = items / columns;
+        } else {
+            rows = items / columns + 1;
+        }
+        int currentRow = 0;
+        int currentCol = 0;
+
+        for (int i = 0; i < items; i++) {
             Node option = new Node();
             attachChild(option);
             options.add(option);
@@ -40,29 +64,39 @@ public class SphereMenu extends Node {
             Geometry buttonGeo = createButton();
             option.attachChild(buttonGeo);
 
-            buttonGeo.setLocalTranslation(new Vector3f(0f, 0f, 6f));
+            buttonGeo.setLocalTranslation(new Vector3f(0f, 0f, radius));
 
-            // move option to the correct position
-            // get random between 0 and 30;
-            int xdeg = - 40; // -rand.nextInt(45);
-            float rot = xdeg * FastMath.DEG_TO_RAD;
+            /*
+             * move option to the correct position
+             */
+
+            float degVer = -degMenuHeight / (rows) * currentRow - offsetVer;
+            float rot = degVer * FastMath.DEG_TO_RAD;
             Quaternion xrot = new Quaternion().fromAngleAxis(rot, new Vector3f(1, 0, 0));
 
-            int deg = 60 / 10 * i;
-            rot = deg * FastMath.DEG_TO_RAD;
+            float degHor;
+            if (currentRow == rows && itemsLastRow > 0) {
+                degHor = degMenuWidth / (itemsLastRow) * (currentCol + 0.5f) - (degMenuWidth / 2);
+            } else {
+                degHor = degMenuWidth / (columns - 1) * currentCol - (degMenuWidth / 2);
+            }
+            rot = degHor * FastMath.DEG_TO_RAD;
             Quaternion yrot = new Quaternion().fromAngleAxis(rot, new Vector3f(0, 1, 0));
 
-            deg = 0; //-rand.nextInt(30);
-            rot = deg * FastMath.DEG_TO_RAD;
-            Quaternion zrot = new Quaternion().fromAngleAxis(rot, new Vector3f(0, 0, 1));
+            option.rotate(yrot.mult(xrot));
 
-            option.rotate(xrot.mult(yrot));
+            currentCol++;
+            if (currentCol >= columns) {
+                currentCol = 0;
+                currentRow++;
+            }
         }
+
+
     }
 
     private Geometry createButton() {
-        float length = 0.5f;
-        Box b = new Box(length, length, length / 10);
+        Box b = new Box(buttonSize, buttonSize, buttonSize / 10);
         Geometry geom = new Geometry("button", b);
 
         Material cube1Mat = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
@@ -70,5 +104,9 @@ public class SphereMenu extends Node {
         cube1Mat.setTexture("ColorMap", cube1Tex);
         geom.setMaterial(cube1Mat);
         return geom;
+    }
+
+    void setRadius(float f) {
+        this.radius = f;
     }
 }
