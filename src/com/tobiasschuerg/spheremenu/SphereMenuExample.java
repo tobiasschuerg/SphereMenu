@@ -32,6 +32,7 @@ public class SphereMenuExample extends SimpleApplication {
         CameraToggleState cc;
         StatsAppState sa;
     }
+    private SphereMenu menu;
 
     public SphereMenuExample() {
         super(new StatsAppState(), new CameraMovementState(), new CameraToggleState());
@@ -53,6 +54,11 @@ public class SphereMenuExample extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
+        if (menu != null) {
+            // make the menu follow the user.
+            menu.setLocalTranslation(getCamera().getLocation());
+            // menu.lookAt(getCamera().getLocation().negate(), getCamera().getUp());
+        }
     }
 
     @Override
@@ -74,14 +80,16 @@ public class SphereMenuExample extends SimpleApplication {
 
     private void createSphereMenu() {
         // create the menu
-        SphereMenu menu = new SphereMenu(this);
+        menu = new SphereMenu(this);
 
         // set up the menu
-        menu.setSize(30, 60);
+        menu.setSize(30, 40);
         menu.setRadius(3f);
         menu.setColumns(3);
 
         // create options
+        menu.add("bar", "Interface/Logo/Monkey.png");
+        menu.add("bar", "Interface/Logo/Monkey.png");
         menu.add("bar", "Interface/Logo/Monkey.png");
         menu.add("bar", "Interface/Logo/Monkey.png");
 
@@ -103,8 +111,7 @@ public class SphereMenuExample extends SimpleApplication {
         pieMenu.addOption("ROTATE", "Interface/Logo/Monkey.png");
 
         // add more simple options
-        menu.add("bar", "Interface/Logo/Monkey.png");
-        menu.add("bar", "Interface/Logo/Monkey.png");
+
         menu.add("bar", "Interface/Logo/Monkey.png");
         menu.add("bar", "Interface/Logo/Monkey.png");
 
