@@ -19,18 +19,17 @@ import tobiasschuerg.lemur.piemenu.example.CameraMovementState;
 import tobiasschuerg.lemur.piemenu.example.CameraToggleState;
 
 /**
- * Example of the Sphere Menu
+ * Example of the Sphere Menu.
  *
- * @author normenhansen
+ * @author Tobias Schürg
  */
 public class SphereMenuExample extends SimpleApplication {
+
+    public static final Quaternion PITCH270 = new Quaternion().fromAngleAxis(FastMath.PI * 3 / 2, new Vector3f(1, 0, 0));
 
     public static void main(String[] args) {
         SphereMenuExample app = new SphereMenuExample();
         app.start();
-        CameraMovementState c;
-        CameraToggleState cc;
-        StatsAppState sa;
     }
     private SphereMenu menu;
 
@@ -45,11 +44,7 @@ public class SphereMenuExample extends SimpleApplication {
 
         createFloor();
         createSphereMenu();
-
-        DirectionalLight sun = new DirectionalLight();
-        sun.setColor(ColorRGBA.Red);
-        sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
-        rootNode.addLight(sun);
+        createLight();
     }
 
     @Override
@@ -63,9 +58,8 @@ public class SphereMenuExample extends SimpleApplication {
 
     @Override
     public void simpleRender(RenderManager rm) {
-        //TODO: add render code
+        //nothing to do
     }
-    public static final Quaternion PITCH270 = new Quaternion().fromAngleAxis(FastMath.PI * 3 / 2, new Vector3f(1, 0, 0));
 
     private void createFloor() {
         Quad q = new Quad(20f, 20f);
@@ -84,15 +78,35 @@ public class SphereMenuExample extends SimpleApplication {
 
         // set up the menu
         menu.setSize(30, 40);
-        menu.setRadius(3f);
+        menu.setRadius(4f);
         menu.setColumns(3);
 
         // create options
-        menu.add("bar", "Interface/Logo/Monkey.png");
-        menu.add("bar", "Interface/Logo/Monkey.png");
-        menu.add("bar", "Interface/Logo/Monkey.png");
-        menu.add("bar", "Interface/Logo/Monkey.png");
+        menu.add("bar", "Interface/favorite21.png");
+        menu.add("bar", "Interface/home152.png");
+        menu.add("bar", "Interface/settings49.png");
+        menu.add("bar", "Interface/power107.png");
+        menu.add("bar", "Interface/calculator69.png");
+        addButtonWithRadialMenu();
+        menu.add("bar", "Interface/facebook4.png");
 
+        // create the menu
+        menu.create();
+
+        // attach it and move it around user
+        rootNode.attachChild(menu);
+        menu.move(getCamera().getLocation());
+        menu.rotate(getCamera().getRotation());
+    }
+
+    private void createLight() {
+        DirectionalLight sun = new DirectionalLight();
+        sun.setColor(ColorRGBA.Red);
+        sun.setDirection(new Vector3f(-.5f, -.5f, -.5f).normalizeLocal());
+        rootNode.addLight(sun);
+    }
+
+    private void addButtonWithRadialMenu() {
         // add piemenu
         Geometry radial = menu.add("one", "Interface/more9.png");
         radial.rotate(3f, 0f, 0f);
@@ -109,17 +123,5 @@ public class SphereMenuExample extends SimpleApplication {
         pieMenu.addOption("RESIZE", "Interface/Logo/Monkey.png");
         pieMenu.addOption("TRANSLATE", "Interface/Logo/Monkey.png");
         pieMenu.addOption("ROTATE", "Interface/Logo/Monkey.png");
-
-        // add more simple options
-
-        menu.add("bar", "Interface/Logo/Monkey.png");
-        menu.add("bar", "Interface/Logo/Monkey.png");
-
-        menu.create();
-
-        // attach it and move it around user
-        rootNode.attachChild(menu);
-        menu.move(getCamera().getLocation());
-        menu.rotate(getCamera().getRotation());
     }
 }

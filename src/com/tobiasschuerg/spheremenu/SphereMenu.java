@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  *
- * @author Tobias
+ * @author Tobias Schürg
  */
 public class SphereMenu extends Node {
 
@@ -84,8 +84,6 @@ public class SphereMenu extends Node {
                 currentRow++;
             }
         }
-
-
     }
 
     private Geometry createButton(String imageResource) {
