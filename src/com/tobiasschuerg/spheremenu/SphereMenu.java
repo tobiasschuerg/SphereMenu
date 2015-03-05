@@ -45,31 +45,24 @@ public class SphereMenu extends Node {
         columns = colums;
     }
 
-    public void create(int items) {
+    public void create() {
+        int itemCount = options.size();
+        System.out.println("items " + itemCount);
         int rows;
-        int itemsLastRow = items % columns;
+        int itemsLastRow = itemCount % columns;
         if (itemsLastRow > 0) {
-            rows = items / columns;
+            rows = itemCount / columns;
         } else {
-            rows = items / columns + 1;
+            rows = itemCount / columns + 1;
         }
         int currentRow = 0;
         int currentCol = 0;
 
-        for (int i = 0; i < items; i++) {
-            Node option = new Node();
-            attachChild(option);
-            options.add(option);
-
-            Geometry buttonGeo = createButton();
-            option.attachChild(buttonGeo);
-
-            buttonGeo.setLocalTranslation(new Vector3f(0f, 0f, radius));
-
+        for (int i = 0; i < itemCount; i++) {
+            Node option = options.get(i);
             /*
              * move option to the correct position
              */
-
             float degVer = -degMenuHeight / (rows) * currentRow - offsetVer;
             float rot = degVer * FastMath.DEG_TO_RAD;
             Quaternion xrot = new Quaternion().fromAngleAxis(rot, new Vector3f(1, 0, 0));
@@ -95,12 +88,12 @@ public class SphereMenu extends Node {
 
     }
 
-    private Geometry createButton() {
+    private Geometry createButton(String imageResource) {
         Box b = new Box(buttonSize, buttonSize, buttonSize / 10);
         Geometry geom = new Geometry("button", b);
 
         Material cube1Mat = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        Texture cube1Tex = app.getAssetManager().loadTexture("Interface/Logo/Monkey.png");
+        Texture cube1Tex = app.getAssetManager().loadTexture(imageResource);
         cube1Mat.setTexture("ColorMap", cube1Tex);
         geom.setMaterial(cube1Mat);
         return geom;
@@ -108,5 +101,17 @@ public class SphereMenu extends Node {
 
     void setRadius(float f) {
         this.radius = f;
+    }
+
+    public Geometry add(String foo, String image) {
+        Node option = new Node(foo);
+
+        Geometry buttonGeo = createButton(image);
+        buttonGeo.setLocalTranslation(new Vector3f(0f, 0f, radius));
+
+        option.attachChild(buttonGeo);
+        attachChild(option);
+        options.add(option);
+        return buttonGeo;
     }
 }

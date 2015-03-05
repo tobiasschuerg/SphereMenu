@@ -1,6 +1,7 @@
 package com.tobiasschuerg.spheremenu;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.app.StatsAppState;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -9,7 +10,13 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
+import com.simsilica.lemur.GuiGlobals;
 import com.jme3.scene.shape.Quad;
+import tobiasschuerg.lemur.piemenu.AbstractPieMenuCallback;
+import tobiasschuerg.lemur.piemenu.PieMenu;
+import tobiasschuerg.lemur.piemenu.example.CameraMovementFunctions;
+import tobiasschuerg.lemur.piemenu.example.CameraMovementState;
+import tobiasschuerg.lemur.piemenu.example.CameraToggleState;
 
 /**
  * Example of the Sphere Menu
@@ -21,10 +28,20 @@ public class SphereMenuExample extends SimpleApplication {
     public static void main(String[] args) {
         SphereMenuExample app = new SphereMenuExample();
         app.start();
+        CameraMovementState c;
+        CameraToggleState cc;
+        StatsAppState sa;
+    }
+
+    public SphereMenuExample() {
+        super(new StatsAppState(), new CameraMovementState(), new CameraToggleState());
     }
 
     @Override
     public void simpleInitApp() {
+        GuiGlobals.initialize(this);
+        CameraMovementFunctions.initializeDefaultMappings(GuiGlobals.getInstance().getInputMapper());
+
         createFloor();
         createSphereMenu();
 
@@ -60,12 +77,38 @@ public class SphereMenuExample extends SimpleApplication {
         SphereMenu menu = new SphereMenu(this);
 
         // set up the menu
-        menu.setSize(45, 75);
-        menu.setRadius(2f);
-        menu.setColumns(2);
+        menu.setSize(30, 60);
+        menu.setRadius(3f);
+        menu.setColumns(3);
 
-        // create / update the menu
-        menu.create(4);
+        // create options
+        menu.add("bar", "Interface/Logo/Monkey.png");
+        menu.add("bar", "Interface/Logo/Monkey.png");
+
+        // add piemenu
+        Geometry radial = menu.add("one", "Interface/more9.png");
+        radial.rotate(3f, 0f, 0f);
+        PieMenu pieMenu = new PieMenu(this, radial); // create a new pieMenu
+        pieMenu.setButtonSize(0.2f);
+        pieMenu.setRadius(0.8f);
+
+        pieMenu.setCallback(new AbstractPieMenuCallback() {
+            @Override
+            public void onOptionSelected(String name) {
+                System.out.println("Selected option: " + name);
+            }
+        });
+        pieMenu.addOption("RESIZE", "Interface/Logo/Monkey.png");
+        pieMenu.addOption("TRANSLATE", "Interface/Logo/Monkey.png");
+        pieMenu.addOption("ROTATE", "Interface/Logo/Monkey.png");
+
+        // add more simple options
+        menu.add("bar", "Interface/Logo/Monkey.png");
+        menu.add("bar", "Interface/Logo/Monkey.png");
+        menu.add("bar", "Interface/Logo/Monkey.png");
+        menu.add("bar", "Interface/Logo/Monkey.png");
+
+        menu.create();
 
         // attach it and move it around user
         rootNode.attachChild(menu);
