@@ -4,6 +4,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
@@ -12,6 +13,7 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.simsilica.lemur.GuiGlobals;
 import com.jme3.scene.shape.Quad;
+import com.jme3.scene.shape.Sphere;
 import tobiasschuerg.lemur.piemenu.AbstractPieMenuCallback;
 import tobiasschuerg.lemur.piemenu.PieMenu;
 import tobiasschuerg.lemur.piemenu.example.CameraMovementFunctions;
@@ -32,6 +34,7 @@ public class SphereMenuExample extends SimpleApplication {
         app.start();
     }
     private SphereMenu menu;
+    private Geometry sphere;
 
     public SphereMenuExample() {
         super(new StatsAppState(), new CameraMovementState(), new CameraToggleState());
@@ -77,9 +80,9 @@ public class SphereMenuExample extends SimpleApplication {
         menu = new SphereMenu(this);
 
         // set up the menu
-        menu.setSize(30, 40);
-        menu.setRadius(4f);
-        menu.setColumns(3);
+        menu.setSize(90, 60);
+        menu.setRadius(3f);
+        menu.setColumns(4);
 
         // create options
         menu.add("bar", "Interface/favorite21.png");
@@ -90,6 +93,13 @@ public class SphereMenuExample extends SimpleApplication {
         addButtonWithRadialMenu();
         menu.add("bar", "Interface/facebook4.png");
 
+        
+        menu.add("bar", "Interface/favorite21.png");
+        menu.add("bar", "Interface/home152.png");
+        menu.add("bar", "Interface/settings49.png");
+        menu.add("bar", "Interface/power107.png");
+        
+        
         // create the menu
         menu.create();
 
@@ -124,4 +134,5 @@ public class SphereMenuExample extends SimpleApplication {
         pieMenu.addOption("TRANSLATE", "Interface/Logo/Monkey.png");
         pieMenu.addOption("ROTATE", "Interface/Logo/Monkey.png");
     }
+    
 }
